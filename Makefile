@@ -5,10 +5,11 @@ IMG = $(patsubst %.JPG,$(OUTPUT)/%.JPG,$(INFILES))
 all: $(OUTPUT) $(IMG)
 
 $(OUTPUT):
-	mkdir $(OUTPUT)
+	@mkdir $(OUTPUT)
 
 $(OUTPUT)/%.JPG: %.JPG
-	convert "$<" -gravity SouthEast -font Nimbus-Sans -pointsize 88 -fill white -stroke black -annotate +30+30  "blah blah blah blah" $@
+	@convert "$<" -resize 25% $@
+	@echo "$< -> $@"
 
 clean:
 	rm -rf $(OUTPUT)

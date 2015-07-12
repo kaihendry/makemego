@@ -16,12 +16,20 @@ func main() {
 		err = os.MkdirAll("out", 0700)
 	}
 
+	errc := make(chan error)
 	for _, img := range images {
-		err := convert(img, "out/"+img)
-		if err != nil {
-			log.Fatal(err)
+		// This runs the conversion job in the background IIUC
+		go func(src string, dst string) {
+			errc <- convert(src, dst)
+		}(img, "out/"+img)
+	}
+
+	for _ = range images {
+		if err := <-errc; err != nil {
+			fmt.Println(err)
 		}
 	}
+
 }
 
 func convert(src string, dst string) (err error) {
